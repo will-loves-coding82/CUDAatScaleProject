@@ -1,9 +1,13 @@
 # Gaussian Blur Image Convolution using CUDA
 
-## Overview
+This project implements a high-performance 2D Gaussian Blur using NVIDIA’s CUDA C++ API. By offloading the computationally intensive convolution operation to the GPU, the system achieves significant speedups compared to traditional CPU-based processing. The smoothing effect is achieved through a Multivariate Gaussian Kernel. The kernel samples values from a normalized probability density function (PDF) across two dimensions since we are working with images.
 
-This project demonstrates the use of NVIDIA's CUDA API to perform image blurring. The goal is to utilize GPU acceleration to efficiently blur using varying gaussian kernel sizes, leveraging the computational power of modern GPUs. Logs are written to `logs.txt` which provides execution traces and runtime (ms) to help gauge the kernel performance. Feel free to view the 10 blurred image results in the `/output` folder. The project is a part of the CUDA at Scale for the Enterprise course and serves as a template for understanding how to implement basic image processing operations using CUDA.
+## Technical Architecture
+To optimize throughput and minimize latency, the implementation utilizes several specific CUDA memory hierarchies and strategies:
 
+- The Gaussian weights are cached in Constant/Texture Memory. This leverages the dedicated hardware-level cache on the GPU, significantly reducing global memory traffic during the frequent read operations required for the convolution stencil.
+- The convolution is implemented as a "valid" transformation, meaning no artificial padding is applied. Consequently, the output image dimensions are reduced by a factor proportional to the kernel radius.
+- The workload is partitioned into a 2D grid of thread blocks, where each thread calculates the weighted average for a single pixel, maximizing the occupancy of the GPU's Streaming Multiprocessors (SMs).
 ## Before 
 <img src="data/pug.jpg" width=400>
 
