@@ -34,8 +34,12 @@
 # Define the compiler and flags
 NVCC = /usr/local/cuda/bin/nvcc
 CXX = g++
-CXXFLAGS = -std=c++11 -I/usr/local/cuda/include -Iinclude
-LDFLAGS = -L/usr/local/cuda/lib64 -lcudart -lnppc -lnppial -lnppicc -lnppidei -lnppif -lnppig -lnppim -lnppist -lnppisu -lnppitc
+
+OPENCV_CFLAGS = $(shell pkg-config --cflags opencv4 2>/dev/null || pkg-config --cflags opencv)
+OPENCV_LDFLAGS = $(shell pkg-config --libs opencv4 2>/dev/null || pkg-config --libs opencv)
+
+CXXFLAGS = -std=c++17 -I/usr/local/cuda/include -Iinclude $(OPENCV_CFLAGS)
+LDFLAGS = -L/usr/local/cuda/lib64 -lcudart -lnppc -lnppial -lnppicc -lnppidei -lnppif -lnppig -lnppim -lnppist -lnppisu -lnppitc $(OPENCV_LDFLAGS)
 
 # Define directories
 SRC_DIR = src
@@ -44,8 +48,8 @@ DATA_DIR = data
 LIB_DIR = lib
 
 # Define source files and target executable
-SRC = $(SRC_DIR)/imageRotationNPP.cpp
-TARGET = $(BIN_DIR)/imageRotationNPP
+SRC = $(SRC_DIR)/cudaBlur.cu
+TARGET = $(BIN_DIR)/cudaBlur
 
 # Define the default rule
 all: $(TARGET)
@@ -57,7 +61,7 @@ $(TARGET): $(SRC)
 
 # Rule for running the application
 run: $(TARGET)
-	./$(TARGET) --input $(DATA_DIR)/Lena.png --output $(DATA_DIR)/Lena_rotated.png
+	./$(TARGET)
 
 # Clean up
 clean:

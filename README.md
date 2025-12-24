@@ -1,8 +1,15 @@
-# Image Rotation using NVIDIA NPP with CUDA
+# Gaussian Blur Image Convolution using CUDA
 
 ## Overview
 
-This project demonstrates the use of NVIDIA Performance Primitives (NPP) library with CUDA to perform image rotation. The goal is to utilize GPU acceleration to efficiently rotate a given image by a specified angle, leveraging the computational power of modern GPUs. The project is a part of the CUDA at Scale for the Enterprise course and serves as a template for understanding how to implement basic image processing operations using CUDA and NPP.
+This project demonstrates the use of NVIDIA's CUDA API to perform image blurring. The goal is to utilize GPU acceleration to efficiently blur using varying gaussian kernel sizes, leveraging the computational power of modern GPUs. Logs are written to `logs.txt` which provides execution traces and runtime (ms) to help gauge the kernel performance. Feel free to view the 10 blurred image results in the `/output` folder. The project is a part of the CUDA at Scale for the Enterprise course and serves as a template for understanding how to implement basic image processing operations using CUDA.
+
+## Before 
+<img src="data/pug.jpg" width=400>
+
+## After 21 x 21 convolution
+<img src="output/pug_blurred.jpg" width=400>
+
 
 ## Code Organization
 
@@ -32,7 +39,7 @@ An optional script used to run your executable code, either with or without comm
 
 ## Key Concepts
 
-Performance Strategies, Image Processing, NPP Library
+Performance Strategies, Image Processing, Cuda Events
 
 ## Supported SM Architectures
 
@@ -108,7 +115,7 @@ If you wish to run the binary directly with custom input/output files, you can u
 
 ```bash
 - Copy code
-./bin/imageRotationNPP --input data/Lena.png --output data/Lena_rotated.png
+./bin/cudaBlur
 ```
 
 - Cleaning Up
