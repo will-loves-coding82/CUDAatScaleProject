@@ -5,7 +5,7 @@ This project implements a high-performance 2D Gaussian Blur using NVIDIA’s CUD
 ## Technical Architecture
 To optimize throughput and minimize latency, the implementation utilizes several specific CUDA memory hierarchies and strategies:
 
-- The Gaussian weights are cached in Constant/Texture Memory. This leverages the dedicated hardware-level cache on the GPU, significantly reducing global memory traffic during the frequent read operations required for the convolution stencil.
+- The Gaussian weights are cached in Constant/Texture Memory with a configurable `KERNEL_SIZE` defined in the program's header files. This leverages the dedicated hardware-level cache on the GPU, significantly reducing global memory traffic during the frequent read operations required for the convolution stencil.
 - The convolution is implemented as a "valid" transformation, meaning no artificial padding is applied. Consequently, the output image dimensions are reduced by a factor proportional to the kernel radius.
 - The workload is partitioned into a 2D grid of thread blocks, where each thread calculates the weighted average for a single pixel, maximizing the occupancy of the GPU's Streaming Multiprocessors (SMs).
 ## Before 
@@ -18,28 +18,22 @@ To optimize throughput and minimize latency, the implementation utilizes several
 ## Code Organization
 
 ```bin/```
-This folder should hold all binary/executable code that is built automatically or manually. Executable code should have use the .exe extension or programming language-specific extension.
+This folder holds the binary/executable code that is built automatically or manually. Executable code should have use the .exe extension or programming language-specific extension.
 
 ```data/```
-This folder should hold all example data in any format. If the original data is rather large or can be brought in via scripts, this can be left blank in the respository, so that it doesn't require major downloads when all that is desired is the code/structure.
-
-```lib/```
-Any libraries that are not installed via the Operating System-specific package manager should be placed here, so that it is easier for inclusion/linking.
+This folder holds all example images used for image processing.
 
 ```src/```
-The source code should be placed here in a hierarchical fashion, as appropriate.
-
-```README.md```
-This file should hold the description of the project so that anyone cloning or deciding if they want to clone this repository can understand its purpose to help with their decision.
-
-```INSTALL```
-This file should hold the human-readable set of instructions for installing the code so that it can be executed. If possible it should be organized around different operating systems, so that it can be done by as many people as possible with different constraints.
+Contains the source code to blur the images defined in `cudaBlur.cuh` and `cudaBlur.cu`.
 
 ```Makefile or CMAkeLists.txt or build.sh```
-There should be some rudimentary scripts for building your project's code in an automatic fashion.
+There should be some rudimentary scripts for building the project's code in an automatic fashion.
 
 ```run.sh```
-An optional script used to run your executable code, either with or without command-line arguments.
+An optional script used to run your executable code, either with or without command-line arguments. To execute this, open the command line prompt and type: 
+```
+source run.sh
+```
 
 ## Key Concepts
 
@@ -57,7 +51,6 @@ Linux, Windows
 
 x86_64, ppc64le, armv7l
 
-## CUDA APIs involved
 
 ## Dependencies needed to build/run
 [FreeImage](../../README.md#freeimage), [NPP](../../README.md#npp)

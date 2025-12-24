@@ -2,7 +2,6 @@
 
 __constant__ float d_kernel[KERNEL_SIZE * KERNEL_SIZE];
 
-
 __global__ void blurKernel(uchar* d_img, uchar* d_blur, int H_in, int W_in, int H_out, int W_out) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
@@ -10,7 +9,6 @@ __global__ void blurKernel(uchar* d_img, uchar* d_blur, int H_in, int W_in, int 
     float sum = 0.0f;
 
     if (x < W_out && y < H_out) {
-
         for (int j=0; j < KERNEL_SIZE; j++) {
             for (int k=0; k < KERNEL_SIZE; k++) {
                 int dx = x + k;
@@ -21,10 +19,7 @@ __global__ void blurKernel(uchar* d_img, uchar* d_blur, int H_in, int W_in, int 
         if (sum < 0.0f) sum = 0.0f;
         if (sum > 255.0f) sum = 255.0f;
         d_blur[y * W_out + x] = (uchar) sum;
-
     }
-    // printf("Sum %f\n", sum);
-
 }
 
 void printKernel(float* kernel, int size) {
@@ -57,7 +52,6 @@ void printKernel(float* kernel, int size) {
 }
 
 __host__ float* make_gaussian_window() {
-    
     float* h_gaussian = (float*) malloc(KERNEL_SIZE * KERNEL_SIZE * sizeof(float));
     float sigma = (float) KERNEL_SIZE / 2.0f;
 
@@ -84,12 +78,10 @@ __host__ float* make_gaussian_window() {
 namespace fs = std::filesystem;
 
 int main() {
-
     string inputFolder = "./data"; 
     fs::create_directories("./output");
     freopen("logs.txt", "w", stdout);
 
-    
     if (!fs::exists(inputFolder)) {
         fprintf(stderr, "Error: Input folder '%s' does not exist!\n", inputFolder.c_str());
         return 1;
